@@ -1,0 +1,10 @@
+server:
+  servlet:
+    context-path: /app-srv-sample
+spring:
+  application:
+    name: app-srv-sample
+  datasource:
+    url: jdbc:h2:mem:app-srv-sample
+flyway:
+  url: jdbc:h2:mem:app-srv-sample
