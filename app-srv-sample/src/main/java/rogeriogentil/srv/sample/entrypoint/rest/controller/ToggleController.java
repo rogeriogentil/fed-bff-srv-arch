@@ -6,6 +6,7 @@ import rogeriogentil.srv.sample.core.domain.Toggle;
 import rogeriogentil.srv.sample.core.exception.ToggleNotFoundException;
 import rogeriogentil.srv.sample.core.usecase.FindAllTogglesUseCase;
 import rogeriogentil.srv.sample.core.usecase.FindToggleByKeyUseCase;
+import rogeriogentil.srv.sample.core.usecase.ToggleFeatureByKeyUseCase;
 import rogeriogentil.srv.sample.entrypoint.rest.adapter.DTOToggleMapper;
 import rogeriogentil.srv.sample.entrypoint.rest.model.ToggleDTO;
 
@@ -17,11 +18,14 @@ public class ToggleController {
 
     private final FindAllTogglesUseCase findAllTogglesUseCase;
     private final FindToggleByKeyUseCase findToggleByKeyUseCase;
+    private final ToggleFeatureByKeyUseCase toggleFeatureByKeyUseCase;
 
     public ToggleController(FindAllTogglesUseCase findAllTogglesUseCase,
-                            FindToggleByKeyUseCase findToggleByKeyUseCase) {
+                            FindToggleByKeyUseCase findToggleByKeyUseCase,
+                            ToggleFeatureByKeyUseCase toggleFeatureByKeyUseCase) {
         this.findAllTogglesUseCase = findAllTogglesUseCase;
         this.findToggleByKeyUseCase = findToggleByKeyUseCase;
+        this.toggleFeatureByKeyUseCase = toggleFeatureByKeyUseCase;
     }
 
     @GetMapping
@@ -33,6 +37,13 @@ public class ToggleController {
     @GetMapping("/{key}")
     public ResponseEntity<ToggleDTO> findByKey(@PathVariable String key) throws ToggleNotFoundException {
         Toggle toggle = findToggleByKeyUseCase.execute(key);
+        ToggleDTO toggleDTO = DTOToggleMapper.INSTANCE.toDTO(toggle);
+        return ResponseEntity.ok(toggleDTO);
+    }
+
+    @PatchMapping("/{key}/toggle")
+    public ResponseEntity<ToggleDTO> toggleByKey(@PathVariable String key) throws ToggleNotFoundException {
+        Toggle toggle = toggleFeatureByKeyUseCase.execute(key);
         ToggleDTO toggleDTO = DTOToggleMapper.INSTANCE.toDTO(toggle);
         return ResponseEntity.ok(toggleDTO);
     }

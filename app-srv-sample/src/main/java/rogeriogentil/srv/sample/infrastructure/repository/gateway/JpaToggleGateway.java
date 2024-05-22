@@ -30,4 +30,9 @@ public class JpaToggleGateway implements ToggleGateway {
         }
         return Optional.empty();
     }
+
+    @Override
+    public void toggleByKey(String key, boolean enabled) {
+        repository.updateByKeyName(key, enabled);
+    }
 }

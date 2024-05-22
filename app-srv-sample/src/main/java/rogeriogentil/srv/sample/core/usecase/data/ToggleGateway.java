@@ -10,4 +10,6 @@ public interface ToggleGateway {
     List<Toggle> findAll();
 
     Optional<Toggle> findByKey(String key);
+
+    void toggleByKey(String key, boolean enabled);
  }
