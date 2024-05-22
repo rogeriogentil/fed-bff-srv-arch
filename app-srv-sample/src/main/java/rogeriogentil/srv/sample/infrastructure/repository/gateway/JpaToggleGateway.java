@@ -8,6 +8,7 @@ import rogeriogentil.srv.sample.infrastructure.repository.mapper.JpaToggleMapper
 import rogeriogentil.srv.sample.infrastructure.repository.persistence.JpaToggleRepository;
 
 import java.util.List;
+import java.util.Optional;
 
 public class JpaToggleGateway implements ToggleGateway {
 
@@ -17,7 +18,16 @@ public class JpaToggleGateway implements ToggleGateway {
     @Override
     public List<Toggle> findAll() {
         List<ToggleEntity> toggleEntities = repository.findAll();
-        List<Toggle> toggles = JpaToggleMapper.INSTANCE.toModels(toggleEntities);
-        return toggles;
+        return JpaToggleMapper.INSTANCE.toModels(toggleEntities);
+    }
+
+    @Override
+    public Optional<Toggle> findByKey(String key) {
+        Optional<ToggleEntity> toggleEntity = repository.findByKeyName(key);
+        if (toggleEntity.isPresent()) {
+            Toggle toggle = JpaToggleMapper.INSTANCE.toModel(toggleEntity.get());
+            return Optional.of(toggle);
+        }
+        return Optional.empty();
     }
 }
